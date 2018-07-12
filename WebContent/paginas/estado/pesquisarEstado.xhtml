@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+			    xmlns:h="http://java.sun.com/jsf/html"
+			    xmlns:ui="http://java.sun.com/jsf/facelets"
+			    xmlns:f="http://java.sun.com/jsf/core"
+			    xmlns:p="http://primefaces.org/ui"
+			    template="/WEB-INF/templates/default.xhtml">
+    
+    <ui:define name="corpo">
+			<p:panel style="width:100%; text-align:center">
+				<h:form id="estadoForm">	
+					<h:panelGrid columns="6">
+						<p:outputLabel value="Nome: " />					
+						<p:inputText 
+							id="nomeEstado"
+							maxlength="45"
+							value="#{estadoBean.nomeEstado}"
+							style="width: 300px" />
+	
+						<p:outputLabel value="Sigla: " />
+						<p:inputText 
+							id="siglaEstado"
+							maxlength="2"
+							value="#{estadoBean.siglaEstado}"
+							style="width: 30px" />
+	
+						<p:commandButton
+							id="pesquisarEstado"
+							value="Pesquisar"
+							icon="ui-icon-search"
+							action="#{estadoBean.pesquisar()}"
+							update=":estadoForm" />
+	
+						<p:commandButton
+							id="incluirEstado"
+							value="Incluir"
+							immediate="true"
+							icon="ui-icon-document"
+							action="#{estadoBean.incluir()}" />
+							
+					</h:panelGrid>
+	
+					<br />
+	
+					<p:dataTable 
+						id="listaEstados"
+						var="estado"
+						value="#{estadoBean.estados}"
+						emptyMessage="Nenhum registro encontrado.">
+	
+						<f:facet name="header">
+							<h:outputText value="Lista de Estados" />
+						</f:facet>
+	
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Nome" />
+							</f:facet>
+							<h:outputText value="#{estado.nome}" />
+						</p:column>
+	
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Sigla" />
+							</f:facet>
+							<h:outputText value="#{estado.sigla}" />
+						</p:column>
+	
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Ações" />
+							</f:facet>
+	
+							<p:commandLink  
+								id="alterarEstado"
+								update="@form"
+								action="#{estadoBean.alterar(estado)}"
+								title="Alterar" >
+								<h:graphicImage library="imagens" name="icons/edit.png" />
+							</p:commandLink>
+	
+							<p:commandLink 
+								id="excluirEstado"
+								update="@form"
+								action="#{estadoBean.excluir(estado)}"
+								title="Excluir">
+								<h:graphicImage library="imagens" name="icons/trash.png" />
+								<p:confirm header="Confirmação" message="Deseja realmente Excluir?" icon="ui-icon-alert" />
+							</p:commandLink>
+							
+							<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+						        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+						    </p:confirmDialog>
+						</p:column>
+					</p:dataTable>
+				</h:form>
+			</p:panel>
+	</ui:define>
+</ui:composition>

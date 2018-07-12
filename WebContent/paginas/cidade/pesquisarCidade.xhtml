@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+			    xmlns:h="http://java.sun.com/jsf/html"
+			    xmlns:ui="http://java.sun.com/jsf/facelets"
+			    xmlns:f="http://java.sun.com/jsf/core"
+			    xmlns:p="http://primefaces.org/ui"
+			    template="/WEB-INF/templates/default.xhtml">
+    
+    <ui:define name="corpo">
+			<p:panel style="width:100%; text-align:center">
+				<h:form id="cidadeForm">
+					<p:messages 
+						id="mensagensInfo" 
+						showDetail="true"
+						autoUpdate="true"
+						severity="info"
+						closable="true" />
+						
+					<p:messages 
+						id="mensagensError" 
+						showDetail="false"
+						autoUpdate="true"
+						severity="error"
+						closable="true" />
+	
+					<h:panelGrid columns="6">
+						<p:outputLabel value="Nome: " />					
+						<p:inputText 
+							id="nomeCidade"
+							maxlength="45"
+							value="#{cidadeBean.nomeCidade}"
+							style="width: 300px" />
+	
+						<p:outputLabel value="Estado: " />						
+						
+						<p:selectOneMenu 
+							id="listaEstado"							
+							title="Estado"
+							label="Estado"
+							converter="#{estadoConverter}"
+							value="#{cidadeBean.estadoSelecionadoPesquisa}">
+							<f:selectItem itemValue="" itemLabel="Selecione o Estado" />  
+							<f:selectItems value="#{cidadeBean.estados}" var="e" itemLabel="#{e.nome} - #{e.sigla}" itemValue="#{e}" />							
+						</p:selectOneMenu>	
+	
+						<p:commandButton
+							id="pesquisarCidade"
+							value="Pesquisar"
+							icon="ui-icon-search"
+							action="#{cidadeBean.pesquisar()}"
+							update=":cidadeForm" />
+	
+						<p:commandButton
+							id="incluirCidade"
+							value="Incluir"
+							immediate="true"
+							icon="ui-icon-document"
+							action="#{cidadeBean.incluir()}"  />
+					</h:panelGrid>
+	
+					<br />
+	
+					<p:dataTable 
+						id="listaCidades"
+						var="cidade"
+						value="#{cidadeBean.cidades}"
+						emptyMessage="Nenhum registro encontrado.">
+	
+						<f:facet name="header">
+							<h:outputText value="Lista de Cidades" />
+						</f:facet>
+	
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Nome" />
+							</f:facet>
+							<h:outputText value="#{cidade.nome}" />
+						</p:column>
+	
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Estado" />
+							</f:facet>
+							<h:outputText value="#{cidade.estado.sigla}" />
+						</p:column>
+	
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Ações" />
+							</f:facet>
+	
+							<p:commandLink  
+								id="alterarCidade"
+								update="@form"
+								action="#{cidadeBean.alterar(cidade)}"
+								title="Alterar">
+								<h:graphicImage library="imagens" name="icons/edit.png" />
+							</p:commandLink>
+	
+							<p:commandLink 
+								id="excluirCidade"
+								update="@form"
+								action="#{cidadeBean.excluir(cidade)}"
+								title="Excluir">
+								<h:graphicImage library="imagens" name="icons/trash.png" />
+								<p:confirm header="Confirmação" message="Deseja realmente Excluir?" icon="ui-icon-alert" />
+							</p:commandLink>
+							
+							<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+						        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+						    </p:confirmDialog>
+						</p:column>
+					</p:dataTable>
+				</h:form>
+			</p:panel>
+		</ui:define>
+</ui:composition>
